@@ -22,21 +22,21 @@ async function main() {
   oracleContract = await oracleFactory.deploy();
   await oracleContract.deployTransaction.wait();
   console.log("Oracle Deployed");
-  await run("verify:verify", { address: oracleContract.address });
+  // await run("verify:verify", { address: oracleContract.address });
 
   //Deploy Delegate (cERC20 Implementation)
   //
   const delegateFactory = await ethers.getContractFactory("CErc20Delegate");
   delegateContract = await delegateFactory.deploy();
   await delegateContract.deployTransaction.wait();
-  await run("verify:verify", { address: delegateContract.address });
+  // await run("verify:verify", { address: delegateContract.address });
 
   // Deploy Comptroller
   const comptrollerFactory = await ethers.getContractFactory("Comptroller");
   comptrollerContract = await comptrollerFactory.deploy();
   await comptrollerContract.deployTransaction.wait();
   originalcomptrollerAddress = comptrollerContract.address;
-  await run("verify:verify", { address: comptrollerContract.address });
+  // await run("verify:verify", { address: comptrollerContract.address });
 
   // Deploy Unitroller
   const unitrollerFactory = await ethers.getContractFactory(
@@ -44,7 +44,7 @@ async function main() {
   );
   unitrollerContract = await unitrollerFactory.deploy();
   await unitrollerContract.deployTransaction.wait();
-  await run("verify:verify", { address: unitrollerContract.address });
+  // await run("verify:verify", { address: unitrollerContract.address });
 
   //Set Implementation for Unitroller
   const setPendingImplementationTx =
@@ -68,10 +68,10 @@ async function main() {
   const COREFactory = await ethers.getContractFactory("ERC20");
   COREContract = await COREFactory.deploy("BAI", "BAI", "18");
   await COREContract.deployTransaction.wait();
-  await run("verify:verify", {
-    address: COREContract.address,
-    constructorArguments: ["BAI", "BAI", "18"],
-  });
+  // await run("verify:verify", {
+  //   address: COREContract.address,
+  //   constructorArguments: ["BAI", "BAI", "18"],
+  // });
 
   // Deploy InterestRateModels
   //For CORE (Fuse pool)
@@ -85,15 +85,15 @@ async function main() {
     "800000000000000000" //uint kink_
   );
   await JumpRateModelContract.deployTransaction.wait();
-  await run("verify:verify", {
-    address: JumpRateModelContract.address,
-    constructorArguments: [
-      "0",
-      "49999999998268800",
-      "1089999999998841600",
-      "800000000000000000",
-    ],
-  });
+  // await run("verify:verify", {
+  //   address: JumpRateModelContract.address,
+  //   constructorArguments: [
+  //     "0",
+  //     "49999999998268800",
+  //     "1089999999998841600",
+  //     "800000000000000000",
+  //   ],
+  // });
   // //For USDC (Fuse pool)
   // USDCJumpRateModelContract = await JumpRateModelFactory.deploy(
   //   "0", //uint baseRatePerYear
@@ -113,10 +113,10 @@ async function main() {
   );
   await WhitePaperModelContract.deployTransaction.wait();
   console.log("Interest Rates Deployed");
-  await run("verify:verify", {
-    address: WhitePaperModelContract.address,
-    constructorArguments: ["19999999999728000", "99999999998640000"],
-  });
+  // await run("verify:verify", {
+  //   address: WhitePaperModelContract.address,
+  //   constructorArguments: ["19999999999728000", "99999999998640000"],
+  // });
   //Deploy mUSD
   const mUSDFactory = await ethers.getContractFactory("CErc20Delegator");
   mUSDContract = await mUSDFactory.deploy(
@@ -131,20 +131,20 @@ async function main() {
     0 //Unused data entry
   );
   await mUSDContract.deployTransaction.wait();
-  await run("verify:verify", {
-    address: mUSDContract.address,
-    constructorArguments: [
-      COREContract.address,
-      unitrollerContract.address,
-      JumpRateModelContract.address,
-      "200000000000000000",
-      "Basin Deposited BAI",
-      "bBAI",
-      "8",
-      delegateContract.address,
-      0,
-    ],
-  });
+  // await run("verify:verify", {
+  //   address: mUSDContract.address,
+  //   constructorArguments: [
+  //     COREContract.address,
+  //     unitrollerContract.address,
+  //     JumpRateModelContract.address,
+  //     "200000000000000000",
+  //     "Basin Deposited BAI",
+  //     "bBAI",
+  //     "8",
+  //     delegateContract.address,
+  //     0,
+  //   ],
+  // });
   //Deploy mETH
   const mEtherFactory = await ethers.getContractFactory("CEther");
   mEtherContract = await mEtherFactory.deploy(
@@ -156,27 +156,27 @@ async function main() {
     "8" //uint8 decimals_
   );
   await mEtherContract.deployTransaction.wait();
-  await run("verify:verify", {
-    address: mEtherContract.address,
-    constructorArguments: [
-      unitrollerContract.address,
-      WhitePaperModelContract.address,
-      "200000000000000000",
-      "Basin Deposited ETH",
-      "bETH",
-      "8",
-    ],
-  });
+  // await run("verify:verify", {
+  //   address: mEtherContract.address,
+  //   constructorArguments: [
+  //     unitrollerContract.address,
+  //     WhitePaperModelContract.address,
+  //     "200000000000000000",
+  //     "Basin Deposited ETH",
+  //     "bETH",
+  //     "8",
+  //   ],
+  // });
   console.log("bTokens Deployed");
 
   //Deploy Fed
   const fedFactory = await ethers.getContractFactory("Fed");
   fedContract = await fedFactory.deploy(mUSDContract.address); //CErc20 ctoken_
   await fedContract.deployTransaction.wait();
-  await run("verify:verify", {
-    address: fedContract.address,
-    constructorArguments: [mUSDContract.address],
-  });
+  // await run("verify:verify", {
+  //   address: fedContract.address,
+  //   constructorArguments: [mUSDContract.address],
+  // });
   console.log("Fed Deployed");
 
   const stabilizerFactory = await ethers.getContractFactory(
@@ -184,22 +184,22 @@ async function main() {
   );
   stabilizerContract = await stabilizerFactory.deploy(
     COREContract.address, // CORE address
-    "0xAC15714c08986DACC0379193e22382736796496f", // axlUSDC address on Base
+    "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb", // DAI address on Base
     100, // 1% buy fee
     100, // 1% sell fee
-    ethers.utils.parseEther("15000000") // 15 mil supply
+    ethers.utils.parseEther("1500000") // 1.5 mil supply
   );
   await stabilizerContract.deployTransaction.wait();
-  await run("verify:verify", {
-    address: stabilizerContract.address,
-    constructorArguments: [
-      COREContract.address,
-      "0xAC15714c08986DACC0379193e22382736796496f",
-      100,
-      100,
-      ethers.utils.parseEther("15000000"),
-    ],
-  });
+  // await run("verify:verify", {
+  //   address: stabilizerContract.address,
+  //   constructorArguments: [
+  //     COREContract.address,
+  //     "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
+  //     100,
+  //     100,
+  //     ethers.utils.parseEther("15000000"),
+  //   ],
+  // });
 
   ////////////////////////////////////////
   //Configurations
@@ -213,9 +213,10 @@ async function main() {
   await setSynthPriceTx.wait();
   //Set Ethereum price feed (Chainlink)
 
-  const setEthPriceTx1 = await oracleContract.setFixedPrice(
+  const setEthPriceTx1 = await oracleContract.setFeed(
     mEtherContract.address,
-    ethers.utils.parseEther("1853")
+    "0x71041dddad3595F9CEd3DcCFBe3D1F4b0a16Bb70", // Chainlink ETH/USD on BASE
+    18 // fixed price decimals
   );
   await setEthPriceTx1.wait();
 
@@ -234,7 +235,7 @@ async function main() {
   //Set Liquidation Incentive
   const setLiquidationIncentiveTx =
     await comptrollerContract._setLiquidationIncentive(
-      ethers.utils.parseEther("0.05")
+      ethers.utils.parseEther("1.1")
     );
   await setLiquidationIncentiveTx.wait();
   //Create CORE Market
@@ -288,10 +289,10 @@ async function main() {
   //   ethers.utils.parseEther("0.04")
   // );
   // await setIMFFactor3Tx.wait();
-  //Set the Maximum amount of borrowed CORE tokens (10mil)
+  //Set the Maximum amount of borrowed CORE tokens (1 mil)
   const setBorrowCapTx = await comptrollerContract._setMarketBorrowCaps(
     [mUSDContract.address],
-    [ethers.utils.parseEther("10000000")]
+    [ethers.utils.parseEther("1000000")]
   );
   await setBorrowCapTx.wait();
   console.log("Comptroller Configured");
@@ -318,7 +319,6 @@ async function main() {
   await addMinterTx.wait();
   console.log("Fed Minters set");
 
-  //fed expension (minting 10mil BAI tokens and depositing them into the protocol)
   //Print all addresses
   console.log(
     "----------------------------------------------------------------------------"
@@ -344,8 +344,9 @@ async function main() {
   console.log(
     "----------------------------------------------------------------------------"
   );
+  //fed expension (minting 1 mil BAI tokens and depositing them into the protocol)
   const expansionTx = await fedContract.expansion(
-    ethers.utils.parseEther("10000000")
+    ethers.utils.parseEther("1000000")
   );
   expansionTx.wait();
   console.log("Fed Expanded");
