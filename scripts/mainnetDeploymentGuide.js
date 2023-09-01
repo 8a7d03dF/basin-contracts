@@ -131,10 +131,7 @@ async function main() {
   const fedFactory = await ethers.getContractFactory("Fed");
   fedContract = await fedFactory.deploy(mUSDContract.address); //CErc20 ctoken_
   await fedContract.deployTransaction.wait();
-  // await run("verify:verify", {
-  //   address: fedContract.address,
-  //   constructorArguments: [mUSDContract.address],
-  // });
+
   console.log("Fed Deployed");
 
   const stabilizerFactory = await ethers.getContractFactory(
@@ -321,6 +318,11 @@ await run("verify:verify", {
   ],
 });
 
+await run("verify:verify", {
+  address: fedContract.address,
+  constructorArguments: [mUSDContract.address],
+});
+
 // Verify contracts
 await run("verify:verify", { address: oracleContract.address });
 
@@ -361,16 +363,16 @@ await run("verify:verify", {
   ],
 });
 
-// await run("verify:verify", {
-//   address: stabilizerContract.address,
-//   constructorArguments: [
-//     COREContract.address,
-//     "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
-//     100,
-//     100,
-//     ethers.utils.parseEther("15000000"),
-//   ],
-// });
+await run("verify:verify", {
+  address: stabilizerContract.address,
+  constructorArguments: [
+    COREContract.address,
+    "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
+    100,
+    100,
+    ethers.utils.parseEther("50000"),
+  ],
+});
 main()
   .then(() => process.exit(0))
   .catch((error) => {
